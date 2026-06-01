@@ -1,3 +1,8 @@
+# Updated basic LLM code for system prompt testing
+# Modified by Katherina L Jesek
+# Any modifications to the original code are provided under MIT License
+
+import json
 import os
 import sys
 import requests
@@ -10,12 +15,34 @@ test_call = os.getenv("TEST_CALL")
 if test_call:
     print(test_call)  # test our load with a print
 else:
-    print("Failed to load environment variables") # default return
+    print("Failed to load environment variables")  # return an error
 
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
 MODEL = "google/gemma-3-4b-it"
 
 prompt_change_flag = False
+
+
+def prompt_database_init():  # open the list from the db file
+    try:
+        with open('database.json', 'r') as file:
+            loaded_database = json.load(file)
+    except FileNotFoundError:
+        loaded_database = []
+    return loaded_database
+
+
+def prompt_database_save(prompt_database):  # save the list of prompts
+    with open('database.json', 'w') as file:
+        json.dump(prompt_database, file, indent=2)
+
+
+def add_prompt_to_database(success,system_prompt,prompt_database):
+    new_entry = [system_prompt, success]
+    prompt_database.append(new_entry)
+    prompt_database_save(prompt_database)
+    print("Saved to database!")
+
 
 def get_api_key() -> str:
     api_key = os.environ.get("AIML_API_KEY") or os.environ.get("AIMLAPI_API_KEY")
@@ -59,10 +86,12 @@ def main() -> None:
         "Answer questions clearly and concisely."
     )
 
+    prompt_database = prompt_database_init()
+
     conversation: list[dict] = []
 
     print("Chatbot ready! Type your message and press Enter.")
-    print("Commands: 'quit' to exit, 'clear' to reset conversation, or 'change' to update system prompt\n")
+    print("Commands: 'quit' to exit, 'clear' to reset conversation,\n 'change' to update system prompt, 'success' to record a good prompt, \nand 'fail' to record a bad one")
 
     while True:
         try:
@@ -70,13 +99,15 @@ def main() -> None:
                 user_input = input("New system prompt: ").strip()
             else:
                 user_input = input("You: ").strip()
+
         except (EOFError, KeyboardInterrupt):
             print("\nGoodbye!")
             break
 
         if not user_input:
             continue
-
+        else:
+            last_user_input = user_input.lower()
         if user_input.lower() == "quit":
             print("Goodbye!")
             break
@@ -85,8 +116,13 @@ def main() -> None:
             conversation = []
             print("Conversation cleared.\n")
             continue
-
-        if prompt_change_flag and user_input.lower() != "quit" and user_input.lower() != "clear":  # if last message was change command
+        if user_input.lower() == 'success':
+            add_prompt_to_database(True, system_prompt, prompt_database)
+            continue
+        if user_input.lower() == 'fail':
+            add_prompt_to_database(False, system_prompt, prompt_database)
+            continue
+        if prompt_change_flag:  # if last message was change command
             system_prompt = user_input
             prompt_change_flag = False
             continue
