@@ -15,6 +15,7 @@ else:
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
 MODEL = "google/gemma-3-4b-it"
 
+prompt_change_flag = False
 
 def get_api_key() -> str:
     api_key = os.environ.get("AIML_API_KEY") or os.environ.get("AIMLAPI_API_KEY")
@@ -50,6 +51,7 @@ def chat(api_key: str, messages: list[dict]) -> str:
 
 
 def main() -> None:
+    global prompt_change_flag
     api_key = get_api_key()
 
     system_prompt = (
@@ -60,11 +62,14 @@ def main() -> None:
     conversation: list[dict] = []
 
     print("Chatbot ready! Type your message and press Enter.")
-    print("Commands: 'quit' to exit, 'clear' to reset conversation.\n")
+    print("Commands: 'quit' to exit, 'clear' to reset conversation, or 'change' to update system prompt\n")
 
     while True:
         try:
-            user_input = input("You: ").strip()
+            if prompt_change_flag:
+                user_input = input("New system prompt: ").strip()
+            else:
+                user_input = input("You: ").strip()
         except (EOFError, KeyboardInterrupt):
             print("\nGoodbye!")
             break
@@ -81,7 +86,14 @@ def main() -> None:
             print("Conversation cleared.\n")
             continue
 
-        
+        if prompt_change_flag and user_input.lower() != "quit" and user_input.lower() != "clear":  # if last message was change command
+            system_prompt = user_input
+            prompt_change_flag = False
+            continue
+
+        if user_input.lower() == "change":  # new command to change sysprompt
+            prompt_change_flag = True
+            continue
 
         if not conversation:
             user_content = f"[Instructions: {system_prompt}]\n\n{user_input}"
