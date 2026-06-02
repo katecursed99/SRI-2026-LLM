@@ -1,58 +1,109 @@
 [
   [
     "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
-    false
-  ],
-  [
-    {
-      "role": "user",
-      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest message. what is your name"
-    },
-    {
-      "role": "assistant",
-      "content": "Hi there! You can call me Gemini. \ud83d\ude0a \n\nHow can I help you today?"
-    }
-  ],
-  [
-    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
-    false
-  ],
-  [
-    {
-      "role": "user",
-      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest message. what is your name"
-    },
-    {
-      "role": "assistant",
-      "content": "Hi there! You can call me Gemini. \ud83d\ude0a \n\nHow can I help you today?"
-    }
+    true,
+    [
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      }
+    ],
+    "google/gemma-3-4b-it"
   ],
   [
     "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
-    false
-  ],
-  [
-    {
-      "role": "user",
-      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest"
-    },
-    {
-      "role": "assistant",
-      "content": "Okay, I\u2019m ready! How can I help you today? \ud83d\ude0a"
-    }
+    true,
+    [
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      }
+    ],
+    "google/gemma-3-4b-it"
   ],
   [
     "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
-    false
+    true,
+    [
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      }
+    ],
+    "google/gemma-3-4b-it"
   ],
   [
-    {
-      "role": "user",
-      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest"
-    },
-    {
-      "role": "assistant",
-      "content": "Okay, I\u2019m ready! How can I help you today? \ud83d\ude0a"
-    }
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    true,
+    [
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      }
+    ],
+    "google/gemma-3-4b-it"
+  ],
+  [
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    true,
+    [
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "user",
+        "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\nSolve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      },
+      {
+        "role": "assistant",
+        "content": "y=3"
+      }
+    ],
+    "google/gemma-3-4b-it"
   ]
 ]
