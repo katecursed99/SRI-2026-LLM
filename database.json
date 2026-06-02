@@ -1,0 +1,58 @@
+[
+  [
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    false
+  ],
+  [
+    {
+      "role": "user",
+      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest message. what is your name"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! You can call me Gemini. \ud83d\ude0a \n\nHow can I help you today?"
+    }
+  ],
+  [
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    false
+  ],
+  [
+    {
+      "role": "user",
+      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest message. what is your name"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! You can call me Gemini. \ud83d\ude0a \n\nHow can I help you today?"
+    }
+  ],
+  [
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    false
+  ],
+  [
+    {
+      "role": "user",
+      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest"
+    },
+    {
+      "role": "assistant",
+      "content": "Okay, I\u2019m ready! How can I help you today? \ud83d\ude0a"
+    }
+  ],
+  [
+    "You are a helpful, friendly assistant. Answer questions clearly and concisely.",
+    false
+  ],
+  [
+    {
+      "role": "user",
+      "content": "[Instructions: You are a helpful, friendly assistant. Answer questions clearly and concisely.]\n\ntest"
+    },
+    {
+      "role": "assistant",
+      "content": "Okay, I\u2019m ready! How can I help you today? \ud83d\ude0a"
+    }
+  ]
+]

@@ -21,6 +21,7 @@ API_URL = "https://api.aimlapi.com/v1/chat/completions"
 MODEL = "google/gemma-3-4b-it"
 
 prompt_change_flag = False
+message_box = []
 
 
 def prompt_database_init():  # open the list from the db file
@@ -29,18 +30,21 @@ def prompt_database_init():  # open the list from the db file
             loaded_database = json.load(file)
     except FileNotFoundError:
         loaded_database = []
-    return loaded_database
+    msg_database = []
+    return loaded_database, msg_database
 
 
-def prompt_database_save(prompt_database):  # save the list of prompts
+def prompt_database_save(prompt_database, msg_database):  # save the list of prompts
     with open('database.json', 'w') as file:
         json.dump(prompt_database, file, indent=2)
 
 
-def add_prompt_to_database(success,system_prompt,prompt_database):
+def add_prompt_to_database(success, system_prompt, prompt_database, message_box, msg_database):
     new_entry = [system_prompt, success]
     prompt_database.append(new_entry)
-    prompt_database_save(prompt_database)
+    new_entry_msg = message_box
+    prompt_database.append(new_entry_msg)
+    prompt_database_save(prompt_database, msg_database)
     print("Saved to database!")
 
 
@@ -86,7 +90,7 @@ def main() -> None:
         "Answer questions clearly and concisely."
     )
 
-    prompt_database = prompt_database_init()
+    prompt_database, msg_database = prompt_database_init()
 
     conversation: list[dict] = []
 
@@ -117,10 +121,10 @@ def main() -> None:
             print("Conversation cleared.\n")
             continue
         if user_input.lower() == 'success':
-            add_prompt_to_database(True, system_prompt, prompt_database)
+            add_prompt_to_database(True, system_prompt, prompt_database, message_box, msg_database)
             continue
         if user_input.lower() == 'fail':
-            add_prompt_to_database(False, system_prompt, prompt_database)
+            add_prompt_to_database(False, system_prompt, prompt_database, message_box, msg_database)
             continue
         if prompt_change_flag:  # if last message was change command
             system_prompt = user_input
@@ -137,11 +141,12 @@ def main() -> None:
             user_content = user_input
 
         conversation.append({"role": "user", "content": user_content})
-
+        message_box.append({"role": "user", "content": user_content})
         reply = chat(api_key, conversation)
 
         if reply:
             conversation.append({"role": "assistant", "content": reply})
+            message_box.append({"role": "assistant", "content": reply})
             print(f"\nAssistant: {reply}\n")
         else:
             conversation.pop()
