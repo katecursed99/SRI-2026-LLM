@@ -12,10 +12,14 @@ FIRST TIME SET UP:
 	beginning of the line. If that doesn't work, reach out for help before moving on or you'll install packages in your global Python environment
 5. Install required packages for the script
 	pip install -r requirements.txt
-6. Run the program from the terminal or command line
+6. Set up your .env file
+	an example has been provided; just paste your API key on to the line and
+	rename the file from ".env.example" to ".env". 
+	Note: when sharing data back with the group, don't share this new .env file or your key will be compromised!
+7. Run the program from the terminal or command line
 	python main.py or python3 main.py
 
-IF YOU'VE ALREADY SET UP ONCE
+IF YOU'VE ALREADY SET UP ONCE AND ARE JUST RUNNING THE PROGRAM:
 
 1. Go to this folder in command prompt, powershell, or terminal
 	(Use cd path\to\your\project on Windows or cd path/to/your/project)
