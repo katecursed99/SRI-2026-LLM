@@ -5,7 +5,10 @@
 # Features added:
 #  Updating prompt and model from within the program
 #  Automated logging of conversations
-#   (manual mode and automatic looping mode with fuzzy match)
+#   (type "success" or "fail" to save a response you score manually)
+#   (or type "loop" to start an automated trial, using fuzzy matching
+#   to determine success. using deterministic questions with single, clear
+#   answers will give you your best data)
 
 import json
 import os
