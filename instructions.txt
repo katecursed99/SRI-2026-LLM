@@ -1,0 +1,29 @@
+FIRST TIME SET UP:
+
+1. Go to this folder in command prompt, powershell, or terminal
+	(Use cd path\to\your\project on Windows or cd path/to/your/project)
+2. Create a new virtual environment
+	python -m venv .venv (Windows) -or- python3 -m venv .venv (Mac/Linux)
+3. Activate the environment
+	in cmd: .venv\Scripts\activate.bat
+	in pwrshell: .venv\Scripts\Activate.ps1
+	in bash: source .venv/Scripts/activate
+4. Check the terminal. You should see something like "(venv)" at the 
+	beginning of the line. If that doesn't work, reach out for help before moving on or you'll install packages in your global Python environment
+5. Install required packages for the script
+	pip install -r requirements.txt
+6. Run the program from the terminal or command line
+	python main.py or python3 main.py
+
+IF YOU'VE ALREADY SET UP ONCE
+
+1. Go to this folder in command prompt, powershell, or terminal
+	(Use cd path\to\your\project on Windows or cd path/to/your/project)
+2. Activate the environment
+	in cmd: .venv\Scripts\activate.bat
+	in pwrshell: .venv\Scripts\Activate.ps1
+	in bash: source .venv/Scripts/activate
+3. Check the terminal. You should see something like "(venv)" at the 
+	beginning of the line
+4. Run the program from the terminal or command line
+	python main.py -or- python3 main.py
