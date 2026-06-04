@@ -155,7 +155,7 @@ def main() -> None:
                 success_condition_n = str(input("Success condition (ie. '3'): "))  # what the program should mark as "true" in the JSON file
                 if success_condition_n:
                     success_condition = success_condition_n
-                similarity_to_consider_success_n = input("Similarity threshold for success (ie. '0.5' to accept 50%+ similarity as success): ")
+                similarity_to_consider_success_n = float(input("Similarity threshold for success (ie. '0.5' to accept 50%+ similarity as success): "))
                 if similarity_to_consider_success_n:
                     similarity_to_consider_success = similarity_to_consider_success_n
                 max_runs_n = int(input("How many times should we try it?: "))
