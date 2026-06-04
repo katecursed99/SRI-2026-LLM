@@ -19,7 +19,7 @@ from dotenv import load_dotenv  # needed to keep API key secret while using Git
 from difflib import SequenceMatcher, get_close_matches  # for fuzzy matching
 
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
-MODEL = "google/gemma-3-4b-it"
+MODEL = "x-ai/grok-3-mini-beta"
 
 prompt_change_flag = False
 message_box = []
@@ -28,6 +28,11 @@ loop_msg = "Solve for y in the equation y=(x+1)/3 for x=8, \nproviding no additi
 success_condition = "y=3"
 similarity_to_consider_success = 0.75
 max_runs = 5
+system_prompt = (
+        "You are a helpful AI assistant." +
+        "I'm going to ask you some test questions to determine your intelligence," +
+        "I need you to answer correctly and without providing additional information, characters, or line-breaks."
+    )
 
 
 def prompt_database_init():  # open the list from the db file
@@ -95,13 +100,10 @@ def chat(api_key: str, messages: list[dict]) -> str:
 
 
 def main() -> None:
-    global prompt_change_flag, message_box, MODEL, multi_run, loop_msg, success_condition, similarity_to_consider_success, max_runs
+    global prompt_change_flag, message_box, MODEL, multi_run, loop_msg, success_condition, similarity_to_consider_success, max_runs, system_prompt
     api_key = get_api_key()
 
-    system_prompt = (
-        "You are a helpful, friendly assistant. "
-        "Answer questions clearly and concisely."
-    )
+    
 
     prompt_database, msg_database = prompt_database_init()
 
@@ -207,9 +209,10 @@ def main() -> None:
             conversation.append({"role": "assistant", "content": reply})
             message_box.append({"role": "assistant", "content": reply})
             print(f"\nAssistant: {reply}\n")
+            cleaned_reply = reply.split('\n', 1)[0]
             if multi_run:
                 # get a similarity profile between the reply and the success condition
-                likeness_ratio = SequenceMatcher(None, reply, success_condition).ratio()
+                likeness_ratio = SequenceMatcher(None, cleaned_reply, success_condition).ratio()
                 likeness_ratio_round = round(likeness_ratio, 2)
                 if likeness_ratio > similarity_to_consider_success:
                     hit_or_miss = True
