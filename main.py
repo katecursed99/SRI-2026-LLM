@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import requests
+import copy
 from dotenv import load_dotenv  # needed to keep API key secret while using Git
 from difflib import SequenceMatcher, get_close_matches  # for fuzzy matching
 
@@ -45,7 +46,7 @@ def prompt_database_save(prompt_database, msg_database):  # save the list of pro
 
 
 def add_prompt_to_database(success, system_prompt, prompt_database, message_box, msg_database):
-    new_entry = [system_prompt, success, message_box, MODEL]
+    new_entry = [system_prompt, success, copy.deepcopy(message_box), MODEL]
     prompt_database.append(new_entry)
     new_entry_msg = message_box
     prompt_database_save(prompt_database, msg_database)
@@ -196,7 +197,8 @@ def main() -> None:
 
         else:
             user_content = user_input
-        last_conversation = conversation.copy()
+        last_conversation = copy.deepcopy(conversation)
+        last_msg_box = copy.deepcopy(message_box)
         conversation.append({"role": "user", "content": user_content})
         message_box.append({"role": "user", "content": user_content})
         reply = chat(api_key, conversation)
@@ -215,7 +217,7 @@ def main() -> None:
                     hit_or_miss = False
                 add_prompt_to_database(hit_or_miss, system_prompt, prompt_database, message_box, msg_database)
                 conversation = last_conversation
-                message_box = last_conversation
+                message_box = last_msg_box
                 ticker += 1
         else:
             conversation.pop()
