@@ -115,6 +115,7 @@ def main() -> None:
             if prompt_change_flag:
                 user_input = input("New system prompt: ").strip()
             elif ticker >= max_runs or not multi_run:
+                multi_run = False
                 user_input = input("You: ").strip()
                 ticker = 0
         except (EOFError, KeyboardInterrupt):
