@@ -31,7 +31,7 @@ max_runs = 5
 system_prompt = (
         "You are a helpful AI assistant." +
         "I'm going to ask you some test questions to determine your intelligence," +
-        "I need you to answer correctly and without providing additional information, characters, or line-breaks."
+        "I need you to answer correctly and without providing additional information. Any tokens after the first new-line will not be considered."
     )
 
 
