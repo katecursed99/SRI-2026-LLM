@@ -9,7 +9,7 @@ import plotter
 #  and adds more work when you try to reuse the code later! - Kate
 Path = 'database.json'
 Data_Collector = {}
-Unique_Questions = 5  # adjust this when adding new questions
+Unique_Questions = 7  # adjust this when adding new questions
 
 def LoadData(path):
     while True:

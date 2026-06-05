@@ -10,6 +10,7 @@
 #   to determine success. using deterministic questions with single, clear
 #   answers will give you your best data)
 
+import questionpipe as qp
 import json
 import os
 import sys
@@ -31,7 +32,7 @@ max_runs = 5
 system_prompt = (
         "You are a helpful AI assistant." +
         "I'm going to ask you some test questions to determine your intelligence," +
-        "I need you to answer correctly and without providing additional information or characters."
+        "I need you to answer correctly and without providing additional information, characters, or explanations. Keep answers contained to a single word wherever possible."
     )
 
 
@@ -103,8 +104,6 @@ def main() -> None:
     global prompt_change_flag, message_box, MODEL, multi_run, loop_msg, success_condition, similarity_to_consider_success, max_runs, system_prompt
     api_key = get_api_key()
 
-    
-
     prompt_database, msg_database = prompt_database_init()
 
     conversation: list[dict] = []
@@ -118,8 +117,15 @@ def main() -> None:
             if prompt_change_flag:
                 user_input = input("New system prompt: ").strip()
             elif ticker >= max_runs or not multi_run:
-                multi_run = False
-                user_input = input("You: ").strip()
+                if not qp.question_pipe_open:
+                    multi_run = False
+                    user_input = input("You: ").strip()
+                else:
+                    if qp.question_pipe_index < len(qp.question_pipe):
+                        qp.question_pipe_index += 1
+                    else:
+                        multi_run = False
+                        continue
                 ticker = 0
         except (EOFError, KeyboardInterrupt):
             print("\nGoodbye!")
@@ -197,6 +203,26 @@ def main() -> None:
         if user_input.lower() == "change":  # new command to change sysprompt
             prompt_change_flag = True
             continue
+
+        if user_input.lower() == "dump":
+            multi_run = True
+            user_content = qp.question_pipe[1]
+            success_condition = qp.qp_answer_key[1]
+            similarity_to_consider_success = qp.qp_match_value[1]
+            qp.question_pipe_open = True
+
+        if qp.question_pipe_open:
+            try:
+                ind = qp.question_pipe_index
+                user_input = qp.question_pipe[ind]
+                success_condition = qp.qp_answer_key[ind]
+                similarity_to_consider_success = qp.qp_match_value[ind]
+            except IndexError:
+                print("Automated question dump done! Check database.json for logs.")
+                multi_run = False
+                qp.question_pipe_open = False
+                continue
+
 
         if not conversation:
             user_content = f"[Instructions: {system_prompt}]\n\n{user_input}"
