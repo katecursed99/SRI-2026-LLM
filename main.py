@@ -32,7 +32,7 @@ max_runs = 5
 system_prompt = (
         "You are a helpful AI assistant." +
         "I'm going to ask you some test questions to determine your intelligence," +
-        "I need you to answer correctly and without providing additional information, characters, or explanations. Keep answers contained to a single word wherever possible."
+        "I need you to answer correctly and without providing additional information, characters, or explanations. Keep answers contained to a single word wherever possible, except when specified otherwise in the question."
     )
 
 
@@ -109,7 +109,7 @@ def main() -> None:
     conversation: list[dict] = []
 
     print("Chatbot ready! Type your message and press Enter.")
-    print("Commands: 'quit' to exit, 'clear' to reset conversation,\n 'change' to update system prompt, 'success' to record a good prompt, \n'fail' to record a bad one, 'loop' or 'repeat' to enter/exit auto mode")
+    print("Commands:\n'quit' to exit, \n'clear' to reset conversation, \n'change' to update system prompt, \n'success' to record a good prompt, \n'fail' to record a bad one, \n'loop' or 'repeat' to enter/exit auto mode, \n'model' to switch the model, \n'dump' to open the question pipeline and feed it automatically\n*note: 'dump' can take a while to run, please be patient \nand do it on a stable wi-fi connection")
     ticker = 0
     user_input = ""
     while True:

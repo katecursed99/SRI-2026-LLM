@@ -9,7 +9,7 @@ import plotter
 #  and adds more work when you try to reuse the code later! - Kate
 Path = 'database.json'
 Data_Collector = {}
-Unique_Questions = 7  # adjust this when adding new questions
+
 
 def LoadData(path):
     while True:
@@ -117,4 +117,4 @@ def CalculateDataPoints():
 
 Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph = CalculateDataPoints()
 plotter.BarGraphFromData(Models_For_Graph, Score_Datapoints_For_Graph)
-plotter.HeatMap(Question_List_For_Graph, Unique_Questions)
+plotter.HeatMap(Question_List_For_Graph, qp.Unique_Questions)
