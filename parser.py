@@ -48,11 +48,15 @@ def CalculateTotals(data_collector):
         total_attempts = 0
         total_questions = 0
         for question in model:  # for each question the model was asked
-            correct_total += model[question]["Correct"]  # total our corrects & tries
-            total_attempts += (model[question]["Correct"]+model[question]["Incorrect"])
-            if model[question]["QuestionNumber"] > total_questions:  # use highest q-number
-                total_questions = model[question]["QuestionNumber"]  # to determine total q's
-        score = correct_total / total_attempts  # calculate a score
+            # total our corrects & tries
+            correct_total += model[question]["Correct"]
+            total_attempts += (model[question]["Correct"]
+                               + model[question]["Incorrect"])
+            # use highest q-number
+            if model[question]["QuestionNumber"] > total_questions:
+                # to determine total q's
+                total_questions = model[question]["QuestionNumber"]
+        score = correct_total / total_attempts  # calculate a correctness score
         model["TotalCorrect"] = correct_total
         model["TotalAttempts"] = total_attempts
         model["UniqueQuestionsAsked"] = total_questions
@@ -61,7 +65,7 @@ def CalculateTotals(data_collector):
 
 
 def PostToCollector(model_name, question, success_value, sys_prompt,
-                    data_collector, question_number):
+                    data_collector, question_num):
     if success_value:
         success = "Correct"  # convert number to text
     else:
@@ -70,7 +74,7 @@ def PostToCollector(model_name, question, success_value, sys_prompt,
         data_collector[model_name] = {}   # avoid overwriting
     if question not in data_collector[model_name]:
         data_collector[model_name][question] = {}
-        data_collector[model_name][question]["QuestionNumber"] = question_number
+        data_collector[model_name][question]["QuestionNumber"] = question_num
     if success not in data_collector[model_name][question]:
         data_collector[model_name][question]["Correct"] = 0
         data_collector[model_name][question]["Incorrect"] = 0
@@ -80,4 +84,11 @@ def PostToCollector(model_name, question, success_value, sys_prompt,
 
 parser_data = LoadData(Path)  # Get the data from the Json file
 ParseData(parser_data, Data_Collector)  # Process it to a usable dataset
-print(Data_Collector)
+for model in Data_Collector:  # for each model name in the data
+    for item in Data_Collector[model]:  # for each element in the model's table
+        # check if it's a list, dict, or other
+        is_list = isinstance(Data_Collector[model][item], list)
+        is_dict = isinstance(Data_Collector[model][item], dict)
+        # if it's other, we can assume it's a calculated total
+        if not is_list and not is_dict:
+            print(model, item, Data_Collector[model][item])
