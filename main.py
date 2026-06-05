@@ -24,14 +24,14 @@ MODEL = "x-ai/grok-3-mini-beta"
 prompt_change_flag = False
 message_box = []
 multi_run = False
-loop_msg = "Solve for y in the equation y=(x+1)/3 for x=8, \nproviding no additional information aside from the correct answer. \nGive answers in the format of 'y=i'"
+loop_msg = "Solve for y in the equation y=(x+1)/3 for x=8, providing no additional information aside from the correct answer. Give answers in the format of 'y=i'"
 success_condition = "y=3"
 similarity_to_consider_success = 0.75
 max_runs = 5
 system_prompt = (
         "You are a helpful AI assistant." +
         "I'm going to ask you some test questions to determine your intelligence," +
-        "I need you to answer correctly and without providing additional information. Any tokens after the first new-line will not be considered."
+        "I need you to answer correctly and without providing additional information or characters."
     )
 
 
@@ -146,6 +146,11 @@ def main() -> None:
             print("Conversation cleared.\n")
             continue
 
+        if user_input.lower() == "print":
+            print(conversation)
+            print(message_box)
+            continue
+
         if user_input.lower() == 'loop' or user_input.lower() == 'repeat':
             if not multi_run:
                 multi_run = True
@@ -195,7 +200,6 @@ def main() -> None:
 
         if not conversation:
             user_content = f"[Instructions: {system_prompt}]\n\n{user_input}"
-
 
         else:
             user_content = user_input
