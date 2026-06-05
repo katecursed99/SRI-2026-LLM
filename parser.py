@@ -9,7 +9,7 @@ import plotter
 #  and adds more work when you try to reuse the code later! - Kate
 Path = 'database.json'
 Data_Collector = {}
-
+Unique_Questions = 5  # adjust this when adding new questions
 
 def LoadData(path):
     while True:
@@ -79,24 +79,42 @@ def PostToCollector(model_name, question, success_value, sys_prompt,
 Models_For_Graph = []
 Score_Datapoints_For_Graph = []
 
+Question_List_For_Graph = {}
+
 
 def CalculateDataPoints():
-    parser_data = LoadData(Path)  # Get the data from the Json file
-    ParseData(parser_data, Data_Collector)  # Process it to a usable dataset
-    for model in Data_Collector:  # for each model name in the data
-        for item in Data_Collector[model]:  # for each element in the model's table
-            # check if it's a list, dict, or other
-            is_list = isinstance(Data_Collector[model][item], list)
-            is_dict = isinstance(Data_Collector[model][item], dict)
-            # if it's other, we can assume it's a calculated total
-            if not is_list and not is_dict:
-                print(model, item, Data_Collector[model][item])
+    parser_data = LoadData(Path)
+    ParseData(parser_data, Data_Collector)
+
+    for model in Data_Collector:
+        for item in Data_Collector[model]:
+            value = Data_Collector[model][item]
+            item = item.rstrip()
+            # Skip the calculated totals — we want question entries only
+            if item in ("TotalCorrect", "TotalAttempts", "Score"):
+                continue
+
+            # Question entries are dicts with Correct/Incorrect counts
+            if isinstance(value, dict) and "Correct" in value:
+                correct = value["Correct"]
+                incorrect = value["Incorrect"]
+                attempts = correct + incorrect
+                question_score = correct / attempts if attempts else 0
+
+                if item not in Question_List_For_Graph:
+                    Question_List_For_Graph[item] = {}
+                Question_List_For_Graph[item][model] = question_score
+
         Models_For_Graph.append(model)
         Score_Datapoints_For_Graph.append(Data_Collector[model]["Score"])
-    print(Models_For_Graph)
-    print(Score_Datapoints_For_Graph)
-    return Models_For_Graph, Score_Datapoints_For_Graph
+
+    print(Question_List_For_Graph)
+    return Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph
 
 
-Models_For_Graph, Score_Datapoints_For_Graph = CalculateDataPoints()
+
+
+
+Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph = CalculateDataPoints()
 plotter.BarGraphFromData(Models_For_Graph, Score_Datapoints_For_Graph)
+plotter.HeatMap(Question_List_For_Graph, Unique_Questions)
