@@ -18,6 +18,7 @@ import requests
 import copy
 from dotenv import load_dotenv  # needed to keep API key secret while using Git
 from difflib import SequenceMatcher, get_close_matches  # for fuzzy matching
+import finishedsound as fs
 
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
 MODEL = "nvidia/nemotron-nano-9b-v2"
@@ -189,6 +190,10 @@ def main() -> None:
             message_box = []
             continue
 
+        if user_input.lower() == 'alarm' or user_input.lower() == 'sound':
+            fs.sound_on_off()
+            continue
+
         if user_input.lower() == 'fail':
             add_prompt_to_database(False, system_prompt, prompt_database, message_box, msg_database)
             conversation = []
@@ -220,6 +225,7 @@ def main() -> None:
                 similarity_to_consider_success = qp.qp_match_value[ind]
             except IndexError:
                 print("Automated question dump done! Check database.json for logs.")
+                fs.finished_sound()
                 multi_run = False
                 qp.question_pipe_open = False
                 qp.question_pipe_index = 1
