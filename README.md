@@ -1,0 +1,33 @@
+
+
+#### Experiment 1
+- The setup
+	- Questions were curated or created by our team of undergrad researchers.
+		- Based on a few different sources, with annotations provided. 
+		- None of the questions in this experiment were generated or reworded by LLMs. 
+		- Previous research on this subject has often relied on AI-generated "synthetic" questions, which we felt could potentially limit the usefulness of a benchmark; likely biasing the questions toward subjects an LLM already has a strong grasp for. 
+	- Models were given very explicit instructions. 
+		- Models were instructed to provide only single-word answers or numerical digits for numerical answers, with no extra information.
+	- A fuzzy-matching algorithm was used to determine correctness, with human oversight to fine-tune. 
+		- The acceptable similarity ratio is different for each question to include as many potential variations of the expected answer, while excluding as many incorrect answers as possible. 
+		- The number for each question was fine-tuned manually by monitoring outputs.
+		- There are a few 
+	- Models were given quite a bit of leeway with response formatting. 
+		- This is to account for differences in common CoT formatting types, so long as they could be detected through simple Python algorithms.
+		- Post-Formatting Rules:
+		- Everything before a `</think>` block is ignored if one is detected. 
+			- This is to reflect real-world applications of models like Qwen.
+		- If more than one `\n` (new-line) is detected, everything before the first one is discarded and the rest are removed.
+			- This is to account for certain models' tendency to reason on the first line and answer on the third.
+		- All caps are converted to lower-case, for both the question and expected answer, before comparing similarity.
+		- Any other formatting issues are treated as incorrect answers.
+			- Significant deviations from directions in controlled lab environments with such clear directions may indicate a potential real-world performance loss.
+		- A potential limitation of this approach is that models who can follow directions properly and don't use a forced CoT format may be unable to follow their CoT processes
+- Where This Improves On Previous Research
+	- Uses human-created questions, unlike the "Easy Problems That LLMs Get Wrong" by Williams & Huckle, which acted as a very strong basis for our research
+	- Uses a non-zero temperature and multiple trials per question, which should more accurately reflect the use of LLM chatbots "in the wild"
+	- Assesses models with a broad range of capabilities
+	- Acts as a current benchmark for the models listed
+	- Is provider-neutral, with no funding coming from the providers of the models
+- Easy Problems That LLMs Get Wrong by [Sean Williams](https://arxiv.org/search/cs?searchtype=author&query=Williams,+S), [James Huckle](https://arxiv.org/search/cs?searchtype=author&query=Huckle,+J)
+- [https://doi.org/10.48550/arXiv.2405.19616](https://doi.org/10.48550/arXiv.2405.19616)

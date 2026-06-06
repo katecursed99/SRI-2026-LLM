@@ -5,12 +5,16 @@ import pandas as pd
 
 
 def BarGraphFromData(categories, values):
+    for model in categories:
+        model = model.split('/')[-1]
+
     # make the plot
-    plt.bar(categories, values, color='skyblue', edgecolor='black',
-            width=0.3)
-    plt.title('Scores by Model')
-    plt.xlabel('Model')
-    plt.ylabel('Score')
+    plt.barh(categories, values, color='skyblue', edgecolor='black',
+             height=0.4)
+    plt.title('Overall Scores by Model')
+    plt.xlabel('Score')
+    plt.ylabel('Model')
+    plt.yticks(ha='left',va='top')
     plt.savefig("model_score_bargraph.svg", dpi=200, bbox_inches="tight")
     # display Gui
     plt.show()
@@ -64,7 +68,7 @@ def HeatMap(data: dict, questions_used: int):
         df,
         annot=True,           # show the score in each cell
         fmt=".1f",
-        cmap="mako",        # red (low) -> green (high)
+        cmap="plasma",        # this is the color palette :)
         vmin=0, vmax=1,
         linewidths=0.5,
         linecolor="white",
@@ -75,7 +79,7 @@ def HeatMap(data: dict, questions_used: int):
     plt.title("Model Performance by Question", fontsize=14, pad=12)
     plt.xlabel("Question")
     plt.ylabel("Model")
-    plt.xticks(rotation=30, ha='right')
+    plt.xticks(rotation=30, ha='right', fontsize='8')
     plt.yticks(rotation=0)
     plt.tight_layout()
     plt.savefig("model_question_heatmap.svg", dpi=200, bbox_inches="tight")

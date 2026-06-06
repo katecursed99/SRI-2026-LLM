@@ -44,9 +44,9 @@ qp_answer_key.append("A")
 qp_match_value.append(0.25)
 
 # question 3
-question_pipe.append("If I walk out the front door of the Stephen A. Schwarzman Building at the New York Public Library, and I’m facing 5th avenue, what direction am I facing?")
+question_pipe.append("If I walk out the front door of the Stephen A. Schwarzman Building at the New York Public Library, and I’m facing 5th avenue, what cardinal direction am I facing?")
 qp_answer_key.append("East")
-qp_match_value.append(0.7)
+qp_match_value.append(0.55)
 
 # question 4
 question_pipe.append("If I’m driving down the road going North, and I turn right, then right again, then right a third time, what direction am I driving?")
@@ -64,7 +64,7 @@ qp_answer_key.append("Manhattan")
 qp_match_value.append(0.5)
 
 # question 7
-question_pipe.append("It was a gift from the French to commemorate American independence. The Eiffel Tower is a famous landmark located in New York.")
+question_pipe.append("True or False: It was a gift from the French to commemorate American independence. The Eiffel Tower is a famous landmark located in New York.")
 qp_answer_key.append("False")
 qp_match_value.append(0.75)
 
@@ -116,7 +116,7 @@ qp_match_value.append(0.65)
 # question 17
 question_pipe.append("Which weighs more? A pound of feathers or a pound of bricks? Reply in a single word. If neither is heavier, reply with 'neither.'")
 qp_answer_key.append("Neither")
-qp_match_value.append(0.8)
+qp_match_value.append(0.7)
 
 # question 18
 question_pipe.append("Find the number x. Exactly one of these statements is true: “x is in the set [3,5,10]” and “x is in the set [1,7,9,10]”. Additionally, exactly one of these statements is true: “x is in the set [2,3,6,8]” and “x is in the set [8]”. Provide answer in “x=” format.")
@@ -139,9 +139,9 @@ qp_answer_key.append("TNAL")
 qp_match_value.append(0.9)
 
 # question 22
-question_pipe.append("My father's mother has one brother, one sister, one daughter, and one son. How many sisters does my father's uncle have?")
+question_pipe.append("My father's mother has one brother, one sister, one daughter, and one son. How many sisters does my father's uncle have? Answer with an integer.")
 qp_answer_key.append("2")
-qp_match_value.append(0.6)
+qp_match_value.append(0.3)
 
 # question 23
 question_pipe.append("Alice is Bob's mother. Anthony is Bob’s father’s uncle. Bob is Carol's father. Carol is Mason’s sister-in-law. What is Alice's relationship to Carol?")

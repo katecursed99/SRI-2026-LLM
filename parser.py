@@ -1,6 +1,7 @@
 import json
 import io
 import plotter
+import questionpipe as qp
 
 # Globals
 #  note: it's good practice to expose these directly to functions *as little as
@@ -29,6 +30,7 @@ def ParseData(parser_data, data_collector):
     for trial in parser_data:  # Run through each trial saved to the file
         success_value = trial[1]  # Check the list for model name
         model_name = trial[3]  # Check list for correctness of answer
+        temperature = trial[4]  # Get the model temperature used for the trial
         whole_message = trial[2][0]["content"]  # Message we sent & sys prompt
         msg_broken = whole_message.split('\n', 1)  # Msg & prompt divorced :(
         sys_prompt = msg_broken[0]  # Now we have all the data we need
@@ -36,7 +38,7 @@ def ParseData(parser_data, data_collector):
             question = msg_broken[1].replace('\n', "")  # Strip extra newline
         data_collector = PostToCollector(model_name, question, success_value,
                                          sys_prompt, data_collector,
-                                         question_number)
+                                         question_number,temperature)
     data_collector = CalculateTotals(data_collector)
     return data_collector
 
@@ -59,19 +61,21 @@ def CalculateTotals(data_collector):
 
 
 def PostToCollector(model_name, question, success_value, sys_prompt,
-                    data_collector, question_num):
+                    data_collector, question_num, temperature):
     if success_value:
         success = "Correct"  # convert number to text
     else:
         success = "Incorrect"
     if model_name not in data_collector:  # initialize step-by-step to
         data_collector[model_name] = {}   # avoid overwriting
+        
     if question not in data_collector[model_name]:
         data_collector[model_name][question] = {}
         data_collector[model_name][question]["QuestionNumber"] = question_num
     if success not in data_collector[model_name][question]:
         data_collector[model_name][question]["Correct"] = 0
         data_collector[model_name][question]["Incorrect"] = 0
+        data_collector[model_name][question]["Temperature"] = temperature
     data_collector[model_name][question][success] += 1
     return data_collector
 
@@ -107,12 +111,7 @@ def CalculateDataPoints():
 
         Models_For_Graph.append(model)
         Score_Datapoints_For_Graph.append(Data_Collector[model]["Score"])
-
-    print(Question_List_For_Graph)
     return Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph
-
-
-
 
 
 Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph = CalculateDataPoints()

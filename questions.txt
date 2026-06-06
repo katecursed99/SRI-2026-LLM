@@ -1,4 +1,0 @@
-* Citation 1: Easy Problems That LLMs Get Wrong by Sean Williams and James Huckle, May 2024
-
-If I walk out the front door of the Stephen A. Schwarzman Building at the New York Public Library, facing 5th avenue, what direction am I facing?
-

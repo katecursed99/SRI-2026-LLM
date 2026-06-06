@@ -20,19 +20,20 @@ from dotenv import load_dotenv  # needed to keep API key secret while using Git
 from difflib import SequenceMatcher, get_close_matches  # for fuzzy matching
 
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
-MODEL = "x-ai/grok-3-mini-beta"
+MODEL = "nvidia/nemotron-nano-9b-v2"
+TEMPERATURE = 0.3
 
 prompt_change_flag = False
 message_box = []
 multi_run = False
-loop_msg = "Solve for y in the equation y=(x+1)/3 for x=8, providing no additional information aside from the correct answer. Give answers in the format of 'y=i'"
-success_condition = "y=3"
+loop_msg = ""
+success_condition = ""
 similarity_to_consider_success = 0.75
-max_runs = 5
+max_runs = 5 
 system_prompt = (
         "You are a helpful AI assistant." +
         "I'm going to ask you some test questions to determine your intelligence," +
-        "I need you to answer correctly and without providing additional information, characters, or explanations. Keep answers contained to a single word wherever possible, except when specified otherwise in the question."
+        "I need you to answer correctly and without providing additional information, characters, or explanations. Keep answers contained to a single word wherever possible, except when specified otherwise in the question. If an answer is numerical, use numerical digits."
     )
 
 
@@ -52,7 +53,7 @@ def prompt_database_save(prompt_database, msg_database):  # save the list of pro
 
 
 def add_prompt_to_database(success, system_prompt, prompt_database, message_box, msg_database):
-    new_entry = [system_prompt, success, copy.deepcopy(message_box), MODEL]
+    new_entry = [system_prompt, success, copy.deepcopy(message_box), MODEL, TEMPERATURE]
     prompt_database.append(new_entry)
     new_entry_msg = message_box
     prompt_database_save(prompt_database, msg_database)
@@ -85,7 +86,7 @@ def chat(api_key: str, messages: list[dict]) -> str:
         json={
             "model": MODEL,
             "messages": messages,
-            "temperature": 0.7,
+            "temperature": TEMPERATURE,
             "max_tokens": 1024,
         },
         timeout=120,
@@ -221,6 +222,7 @@ def main() -> None:
                 print("Automated question dump done! Check database.json for logs.")
                 multi_run = False
                 qp.question_pipe_open = False
+                qp.question_pipe_index = 1
                 continue
 
 
@@ -239,18 +241,31 @@ def main() -> None:
             conversation.append({"role": "assistant", "content": reply})
             message_box.append({"role": "assistant", "content": reply})
             print(f"\nAssistant: {reply}\n")
-            cleaned_reply = reply.split('\n', 1)[0]
+            try:
+                cleaned_reply = reply.split('</think>', 1)[1]
+            except IndexError:
+                try:
+                    cleaned_reply = reply.split('\n')[1] # THIs IS WHERE I LEFT OFF LOL
+                except IndexError:
+                    cleaned_reply = reply
+            cleaned_reply = cleaned_reply.replace('\n', '')
+            cleaned_reply = cleaned_reply.lower()
             if multi_run:
+                print("extracted answer: " + cleaned_reply)
                 # get a similarity profile between the reply and the success condition
-                likeness_ratio = SequenceMatcher(None, cleaned_reply, success_condition).ratio()
+                likeness_ratio = SequenceMatcher(None, cleaned_reply, success_condition.lower()).ratio()
                 likeness_ratio_round = round(likeness_ratio, 2)
                 if likeness_ratio > similarity_to_consider_success:
                     hit_or_miss = True
                 else:
                     hit_or_miss = False
                 add_prompt_to_database(hit_or_miss, system_prompt, prompt_database, message_box, msg_database)
-                conversation = last_conversation
-                message_box = last_msg_box
+                if qp.question_pipe_open:
+                    conversation = []
+                    message_box = []
+                else:
+                    conversation = last_conversation
+                    message_box = last_msg_box
                 ticker += 1
         else:
             conversation.pop()
