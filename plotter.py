@@ -2,22 +2,51 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pandas as pd
-
+from scipy import stats
+from adjustText import adjust_text
 
 def BarGraphFromData(categories, values):
     for model in categories:
         model = model.split('/')[-1]
 
+    colors = ['green' if y >= 0.8 else 'yellow' if y >= 0.6 else 'red' for y in values]
     # make the plot
-    plt.barh(categories, values, color='skyblue', edgecolor='black',
+    plt.barh(categories, values, color=colors, edgecolor='black',
              height=0.4)
     plt.title('Overall Scores by Model')
     plt.xlabel('Score')
-    plt.ylabel('Model')
-    plt.yticks(ha='left',va='top')
+    plt.ylabel('Models (sorted by cost, ascending)')
+    plt.yticks(ha='left', va='top')
     plt.savefig("model_score_bargraph.svg", dpi=200, bbox_inches="tight")
     # display Gui
     plt.show()
+
+
+def PriceAgainstIntelligence(models, correctness, prices):
+    fig, ax = plt.subplots()
+    ax.scatter(correctness, prices, color='skyblue')
+    ax.set_xlabel('Score')
+    ax.set_ylabel('Token cost by $/1m')
+
+    # Calculate R-value
+    correlation_matrix = np.corrcoef(correctness, prices)
+    r_value = correlation_matrix[0, 1]
+    # Calculate P-value
+    corr_stat, p_val_corr = stats.pearsonr(correctness, prices)
+
+    ax.set_title("R^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
+
+    cleaned_models = []
+    for model in models:
+        model = model.split('/')[1]
+        cleaned_models.append(model)
+    labels = []
+    for i, lbl in enumerate(cleaned_models):
+        labels.append(ax.text(correctness[i], prices[i], lbl))
+    adjust_text(labels, arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
+        force_static=(1,1), force_text=(6,6), expand=(1.4,1.4))
+    plt.show()
+
 
 
 def HeatMap(data: dict, questions_used: int):
@@ -78,7 +107,7 @@ def HeatMap(data: dict, questions_used: int):
 
     plt.title("Model Performance by Question", fontsize=14, pad=12)
     plt.xlabel("Question")
-    plt.ylabel("Model")
+    plt.ylabel("Models (sorted by cost, ascending)")
     plt.xticks(rotation=30, ha='right', fontsize='8')
     plt.yticks(rotation=0)
     plt.tight_layout()

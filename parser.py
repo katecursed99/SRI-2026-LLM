@@ -2,6 +2,7 @@ import json
 import io
 import plotter
 import questionpipe as qp
+import pricelist as pl
 
 # Globals
 #  note: it's good practice to expose these directly to functions *as little as
@@ -82,6 +83,7 @@ def PostToCollector(model_name, question, success_value, sys_prompt,
 
 Models_For_Graph = []
 Score_Datapoints_For_Graph = []
+Price_List_For_Graph = []
 
 Question_List_For_Graph = {}
 
@@ -90,30 +92,52 @@ def CalculateDataPoints():
     parser_data = LoadData(Path)
     ParseData(parser_data, Data_Collector)
 
+    SUMMARY_KEYS = {"TotalCorrect", "TotalAttempts", "Score", "AverageCost"}
+
+    # First pass: just calculate AverageCost for each model
     for model in Data_Collector:
-        for item in Data_Collector[model]:
-            value = Data_Collector[model][item]
-            item = item.rstrip()
-            # Skip the calculated totals — we want question entries only
-            if item in ("TotalCorrect", "TotalAttempts", "Score"):
+        price_info = pl.model_prices.get(model, {})
+        Data_Collector[model]["AverageCost"] = price_info.get("avg", 0)
+
+    # Sort by cost
+    Data_Collector_Sorted = sorted(
+        Data_Collector.items(),
+        key=lambda x: x[1].get("AverageCost", 0)
+    )
+
+    # Second pass: build all graph lists in sorted order
+    for model, model_data in Data_Collector_Sorted:
+        Models_For_Graph.append(model)
+        Score_Datapoints_For_Graph.append(model_data.get("Score", 0))
+        Price_List_For_Graph.append(model_data.get("AverageCost", 0))
+
+        # Build question scores in this same sorted order
+        for original_key, value in model_data.items():
+            clean_key = original_key.rstrip()
+            if clean_key in SUMMARY_KEYS:
                 continue
 
-            # Question entries are dicts with Correct/Incorrect counts
             if isinstance(value, dict) and "Correct" in value:
-                correct = value["Correct"]
-                incorrect = value["Incorrect"]
+                correct = value.get("Correct", 0)
+                incorrect = value.get("Incorrect", 0)
                 attempts = correct + incorrect
-                question_score = correct / attempts if attempts else 0
+                question_score = correct / attempts if attempts > 0 else 0
 
-                if item not in Question_List_For_Graph:
-                    Question_List_For_Graph[item] = {}
-                Question_List_For_Graph[item][model] = question_score
+                # setdefault ensures the inner dict exists
+                # Since we're iterating models in sorted order, 
+                # the inner dict will be populated in sorted order
+                Question_List_For_Graph.setdefault(clean_key, {})[model] = question_score
+    for question in Question_List_For_Graph:
+        Question_List_For_Graph[question] = dict(
+            reversed(Question_List_For_Graph[question].items())
+        )
 
-        Models_For_Graph.append(model)
-        Score_Datapoints_For_Graph.append(Data_Collector[model]["Score"])
     return Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph
 
 
+
 Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph = CalculateDataPoints()
+plotter.PriceAgainstIntelligence(Models_For_Graph, Score_Datapoints_For_Graph, Price_List_For_Graph)
+
 plotter.BarGraphFromData(Models_For_Graph, Score_Datapoints_For_Graph)
 plotter.HeatMap(Question_List_For_Graph, qp.Unique_Questions)

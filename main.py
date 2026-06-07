@@ -77,6 +77,39 @@ def get_api_key() -> str:
     return api_key
 
 
+def ExtractAnswers(reply):
+    try:
+        cleaned_reply = reply.split('</think>', 1)[1]
+    except IndexError:
+        try:
+            cleaned_reply = reply.split("**", 0)[1]
+            cleaned_reply = cleaned_reply.replace('**', '')
+        except IndexError:
+            try:
+                cleaned_reply = reply.split('\n')[1]
+            except IndexError:
+                cleaned_reply = reply
+    cleaned_reply = cleaned_reply.replace('\n', '')
+    if cleaned_reply == "" or cleaned_reply == " ":
+        try:
+            cleaned_reply = reply.split('\n')[-1]
+        except IndexError:
+            try:
+                cleaned_reply = reply.split(':', -1)[-1]
+            except IndexError:
+                try:
+                    cleaned_reply = reply.split('\n')[0]
+                except IndexError:
+                    cleaned_reply = reply
+    if cleaned_reply == "":
+        cleaned_reply = reply
+    if reply == "":
+        cleaned_reply = "Failure to follow directions, mark incorrect"
+    cleaned_reply = cleaned_reply.replace('\n', '')
+    cleaned_reply = cleaned_reply.lower()
+    return cleaned_reply
+
+
 def chat(api_key: str, messages: list[dict]) -> str:
     response = requests.post(
         API_URL,
@@ -247,15 +280,7 @@ def main() -> None:
             conversation.append({"role": "assistant", "content": reply})
             message_box.append({"role": "assistant", "content": reply})
             print(f"\nAssistant: {reply}\n")
-            try:
-                cleaned_reply = reply.split('</think>', 1)[1]
-            except IndexError:
-                try:
-                    cleaned_reply = reply.split('\n')[1] # THIs IS WHERE I LEFT OFF LOL
-                except IndexError:
-                    cleaned_reply = reply
-            cleaned_reply = cleaned_reply.replace('\n', '')
-            cleaned_reply = cleaned_reply.lower()
+            cleaned_reply = ExtractAnswers(reply)
             if multi_run:
                 print("extracted answer: " + cleaned_reply)
                 # get a similarity profile between the reply and the success condition
