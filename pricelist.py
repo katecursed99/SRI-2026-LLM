@@ -87,6 +87,7 @@ model_prices = {
     "x-ai/grok-4-20-0309-non-reasoning": {"in": 2.6, "out": 7.8},
     "x-ai/grok-4-20-0309-reasoning": {"in": 2.6, "out": 7.8},
     "google/gemini-3-1-pro-preview": {"in": 2.6, "out": 15.6},
+    "alibaba/qwen3.6-max-preview": {"in": 1.69, "out": 10.14},
 
     # ~$3–10
     "alibaba/qwen3.7-max": {"in": 3.25, "out": 9.75},
@@ -94,7 +95,7 @@ model_prices = {
     "openai/gpt-5-4": {"in": 3.25, "out": 19.5},
     "anthropic/claude-sonnet-4.6": {"in": 3.9, "out": 19.5},
     "perplexity/sonar-pro": {"in": 3.9, "out": 19.5},
-    "alibaba/qwen3.6-max-preview": {"in": 1.69, "out": 10.14},
+    
 
     # ~$6+ (premium)
     # Expanded anthropic/claude-opus-4*

@@ -5,6 +5,7 @@ import pandas as pd
 from scipy import stats
 from adjustText import adjust_text
 
+
 def BarGraphFromData(categories, values):
     for model in categories:
         model = model.split('/')[-1]

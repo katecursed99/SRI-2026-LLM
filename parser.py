@@ -3,6 +3,7 @@ import io
 import plotter
 import questionpipe as qp
 import pricelist as pl
+import lettergrade as lg
 
 # Globals
 #  note: it's good practice to expose these directly to functions *as little as
@@ -82,13 +83,15 @@ def PostToCollector(model_name, question, success_value, sys_prompt,
 
 
 Models_For_Graph = []
+Models_With_Letter_Scores_For_Bar = []
 Score_Datapoints_For_Graph = []
 Price_List_For_Graph = []
-
 Question_List_For_Graph = {}
+Letter_Grades_For_Graph = []
 
 
-def CalculateDataPoints():
+
+def CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph):
     parser_data = LoadData(Path)
     ParseData(parser_data, Data_Collector)
 
@@ -108,7 +111,13 @@ def CalculateDataPoints():
     # Second pass: build all graph lists in sorted order
     for model, model_data in Data_Collector_Sorted:
         Models_For_Graph.append(model)
-        Score_Datapoints_For_Graph.append(model_data.get("Score", 0))
+        model_score = model_data.get("Score", 0)
+
+        print(model_score)
+        model_letter_score = lg.CalculateLetterGrade(model_score)
+        Letter_Grades_For_Graph.append(model_letter_score)
+        Models_With_Letter_Scores_For_Bar.append(model+" "+model_letter_score)
+        Score_Datapoints_For_Graph.append(model_score)
         Price_List_For_Graph.append(model_data.get("AverageCost", 0))
 
         # Build question scores in this same sorted order
@@ -132,12 +141,12 @@ def CalculateDataPoints():
             reversed(Question_List_For_Graph[question].items())
         )
 
-    return Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph
+    return Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph
 
 
 
-Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph = CalculateDataPoints()
+Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph = CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph)
 plotter.PriceAgainstIntelligence(Models_For_Graph, Score_Datapoints_For_Graph, Price_List_For_Graph)
 
-plotter.BarGraphFromData(Models_For_Graph, Score_Datapoints_For_Graph)
+plotter.BarGraphFromData(Models_With_Letter_Scores_For_Bar, Score_Datapoints_For_Graph)
 plotter.HeatMap(Question_List_For_Graph, qp.Unique_Questions)
