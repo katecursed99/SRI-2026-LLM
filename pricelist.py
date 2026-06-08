@@ -42,7 +42,7 @@ model_prices = {
     "google/gemini-3-1-flash-lite-preview": {"in": 0.33, "out": 1.95},
     "alibaba/qwen3.6-35b-a3b": {"in": 0.375, "out": 2.25},
     "minimax/m2": {"in": 0.39, "out": 1.56},
-    "minimax/m2-1": {"in": 0.39, "out": 1.56},
+    "minimax/m2-1": {"in": 0.39, "out": 1.56}, ###
     "xiaomi/mimo-v2.5": {"in": 0.4, "out": 2.0},
     "nousresearch/hermes-4-405b": {"in": 0.41145, "out": 1.6458},
 
@@ -57,15 +57,18 @@ model_prices = {
     "bytedance/dola-seed-2-0-code": {"in": 0.65, "out": 3.9},
     "google/gemini-3-flash-preview": {"in": 0.65, "out": 3.9},
     "alibaba/qwen3.6-plus": {"in": 0.65, "out": 0.39},
+    "openai/gpt-3.5-turbo": {"in": 0.50, "out": 1.50},
     # Expanded baidu/ernie-4.5-vl-*
     "baidu/ernie-4.5-vl-28b-a3b": {"in": 0.6435, "out": 1.859},
     "baidu/ernie-4.5-vl-424b-a47b": {"in": 0.6435, "out": 1.859},
     "baidu/ernie-4-5-turbo-vl-32k": {"in": 0.6435, "out": 1.859},
     "zhipu/glm-4.6": {"in": 0.78, "out": 2.86},
     "zhipu/glm-4.7": {"in": 0.78, "out": 2.86},
-    "moonshot/kimi-k2-5": {"in": 0.78, "out": 3.9},
+    "moonshot/kimi-k2-5": {"in": 0.78, "out": 3.9}, ###
     "alibaba/qwen3.6-27b": {"in": 0.78, "out": 4.68},
     "xiaomi/mimo-v2.5-pro": {"in": 1.0, "out": 3.0},
+    "zhipu/glm-4.5": {"in": 0.60, "out": 2.2},
+
 
     # ~$1–3
     # Expanded baidu/ernie-5-0-*
@@ -93,10 +96,10 @@ model_prices = {
     "alibaba/qwen3.7-max": {"in": 3.25, "out": 9.75},
     "google/gemini-3-5-flash": {"in": 3.25, "out": 23.4},
     "anthropic/claude-sonnet-4.6": {"in": 3.9, "out": 19.5},
-    "perplexity/sonar-pro": {"in": 3.9, "out": 19.5},
-    
+    "perplexity/sonar-pro": {"in": 3.9, "out": 19.5}, ###
 
     # ~$6+ (premium)
+    "openai/gpt-5-5": {"in": 6.5, "out": 39},
     # Expanded anthropic/claude-opus-4*
     "anthropic/claude-opus-4": {"in": 6.5, "out": 32.5},
     "anthropic/claude-opus-4-5": {"in": 6.5, "out": 32.5},

@@ -39,7 +39,10 @@ def PriceAgainstIntelligence(models, correctness, prices):
 
     cleaned_models = []
     for model in models:
-        model = model.split('/')[1]
+        try:
+            model = model.split('/')[1]
+        except IndexError:
+            pass
         cleaned_models.append(model)
     labels = []
     for i, lbl in enumerate(cleaned_models):
@@ -47,6 +50,7 @@ def PriceAgainstIntelligence(models, correctness, prices):
     adjust_text(labels, arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
         #force_text=(1.4,2.2))
         force_text=(1.2,2))
+    plt.savefig("intel_v_score_scatterplot.svg", dpi=200, bbox_inches="tight")
     plt.show()
 
 
@@ -106,13 +110,16 @@ def HeatMap(data: dict, questions_used: int):
         cbar_kws={'label': 'Score'},
         square=False
     )
-
+    ax.margins(x=0)
+    ax.set_yticks(ax.get_yticks())
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=45)
     plt.title("Model Performance by Question", fontsize=14, pad=12)
     plt.xlabel("Question")
     plt.ylabel("Models (sorted by cost, ascending)")
     plt.xticks(rotation=30, ha='right', fontsize='8')
     plt.yticks(rotation=0)
     plt.tight_layout()
+
     plt.savefig("model_question_heatmap.svg", dpi=200, bbox_inches="tight")
     plt.show()
 

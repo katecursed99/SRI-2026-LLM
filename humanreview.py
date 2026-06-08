@@ -14,10 +14,14 @@ def LoadData(path):
 
 def NeedsReview(trial):
     if len(trial[2][1]["content"].split()) > 2 and not trial[1]:
-        return True
+        try:
+            print(trial[4])
+            return True
+        except IndexError:
+            return True
 
 
-def ParseData(parser_data):
+def ParseData(parser_data, reviewer_name):
     question_number = 0
     question = ""  # Initialize this so the first check can run
     num_of_reviews = 0
@@ -42,30 +46,33 @@ def ParseData(parser_data):
         if question != msg_broken[1].replace('\n', ""):  # Check if updating
             question = msg_broken[1].replace('\n', "")  # Strip extra newline
         bot_message_cleaned = ExtractAnswers(bot_message)
-        SendForReview(question, bot_message_cleaned, success_value, bot_message, trial)
+        SendForReview(question, bot_message_cleaned, success_value, bot_message, trial, reviewer_name)
         print(bot_message_cleaned)
 
 
-def SendForReview(question, msg, success_value, bot_message, trial):
+def SendForReview(question, msg, success_value, bot_message, trial, reviewer_name):
     # find the high-information (aka unexpected) messages parsed
     while True:
         if NeedsReview(trial):
-            print("Hello human! Please review the following. The model name has been intentionally obscured so as to not bias your results.\n\nUse 'info' to see the rest of the bot's answer if the parser looks like it's grabbing the wrong chunks.")
+            print("Hello "+reviewer_name+"! Please review the following. The model name has been intentionally obscured so as to not bias your results.\n\nUse 'info' to see the rest of the bot's answer if the parser looks like it's grabbing the wrong chunks.")
             print("\nQUESTION: "+question)
             print("\nANSWER: "+msg)
             print("\nMachine grader marked: **INCORRECT**")
             change_answer_flag = input("\nDoes this need to be edited? y/n ")
             if change_answer_flag.lower() == "info":
-                print("Full response was: "+bot_message)
-                change_answer_flag = input("Does this need to be edited? y/n ")
+                print("\nFull response was: "+bot_message)
+                change_answer_flag = input("\nDoes this need to be edited? y/n ")
             elif change_answer_flag.lower() == "y":
-                change_confirmation = input("Are you sure? Only hit 'y' if the bot was unfairly marked incorrect. y/n ")
+                change_confirmation = input("\nAre you sure? Only hit 'y' if the bot was unfairly marked incorrect. y/n \n")
                 if change_confirmation == "y":
                     trial[1] = not trial[1]
                     break
                 else:
                     break
             elif change_answer_flag == "n":
+                sign_flag = input("Sign off that you\na) have reviewed this question and \nb) believe the filter was accurate? y/n \n")
+                if sign_flag.lower() == 'y':
+                    trial.append(reviewer_name)
                 break
         else:
             break
@@ -102,5 +109,6 @@ def ExtractAnswers(reply):
     return cleaned_reply
 
 
+reviewer_name = input("What is your name? ")
 data_file = LoadData("database.json")
-ParseData(data_file)
+ParseData(data_file, reviewer_name)
