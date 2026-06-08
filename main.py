@@ -82,26 +82,24 @@ def ExtractAnswers(reply):
         cleaned_reply = reply.split('</think>', 1)[1]
     except IndexError:
         try:
-            cleaned_reply = reply.split("**", 0)[1]
-            cleaned_reply = cleaned_reply.replace('**', '')
+            cleaned_reply = reply.split('\n')[0]
         except IndexError:
-            try:
-                cleaned_reply = reply.split('\n')[1]
-            except IndexError:
-                cleaned_reply = reply
+            cleaned_reply = reply
     cleaned_reply = cleaned_reply.replace('\n', '')
-    if cleaned_reply == "" or cleaned_reply == " ":
+    if cleaned_reply == "" or cleaned_reply == " " or len(cleaned_reply.split(' ')) > 2:
         try:
             cleaned_reply = reply.split('\n')[-1]
+            if len(cleaned_reply.split(' ')) > 1 or len(cleaned_reply.split(' ')) < 0:
+                cleaned_reply = reply.split('\n')[1]
         except IndexError:
             try:
-                cleaned_reply = reply.split(':', -1)[-1]
+                cleaned_reply = reply.split(':')[-1]
             except IndexError:
                 try:
                     cleaned_reply = reply.split('\n')[0]
                 except IndexError:
                     cleaned_reply = reply
-    if cleaned_reply == "":
+    if cleaned_reply == "" or len(cleaned_reply.split(' ')) > 2:
         cleaned_reply = reply
     if reply == "":
         cleaned_reply = "Failure to follow directions, mark incorrect"

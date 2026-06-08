@@ -92,7 +92,6 @@ model_prices = {
     # ~$3–10
     "alibaba/qwen3.7-max": {"in": 3.25, "out": 9.75},
     "google/gemini-3-5-flash": {"in": 3.25, "out": 23.4},
-    "openai/gpt-5-4": {"in": 3.25, "out": 19.5},
     "anthropic/claude-sonnet-4.6": {"in": 3.9, "out": 19.5},
     "perplexity/sonar-pro": {"in": 3.9, "out": 19.5},
     

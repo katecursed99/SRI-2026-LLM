@@ -45,7 +45,8 @@ def PriceAgainstIntelligence(models, correctness, prices):
     for i, lbl in enumerate(cleaned_models):
         labels.append(ax.text(correctness[i], prices[i], lbl))
     adjust_text(labels, arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
-        force_static=(1,1), force_text=(6,6), expand=(1.4,1.4))
+        #force_text=(1.4,2.2))
+        force_text=(1.2,2))
     plt.show()
 
 
