@@ -48,15 +48,20 @@ def ParseData(parser_data, data_collector):
 def CalculateTotals(data_collector):
     for model_name in data_collector:  # for each model's entry
         model = data_collector[model_name]
-        correct_total = 0
+        total_failures = 0
         total_attempts = 0
+        correct_total = 0
         for question in model:  # for each question the model was asked
-            # total our corrects & tries
-            correct_total += model[question]["Correct"]
-            total_attempts += (model[question]["Correct"]
-                               + model[question]["Incorrect"])
-        score = correct_total / total_attempts  # calculate a correctness score
+            
+            total_attempts += 1
+            if model[question]["Incorrect"]: # if ANY are a failure
+                total_failures += 1
+                
+            else:
+                correct_total += 1
+        score = correct_total/total_attempts
         model["TotalCorrect"] = correct_total
+        model["TotalFails"] = total_failures
         model["TotalAttempts"] = total_attempts
         model["Score"] = score
     return data_collector
@@ -90,7 +95,6 @@ Question_List_For_Graph = {}
 Letter_Grades_For_Graph = []
 
 
-
 def CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph):
     parser_data = LoadData(Path)
     ParseData(parser_data, Data_Collector)
@@ -114,9 +118,9 @@ def CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_L
         model_score = model_data.get("Score", 0)
 
         print(model_score)
-        model_letter_score = lg.CalculateLetterGrade(model_score)
-        Letter_Grades_For_Graph.append(model_letter_score)
-        Models_With_Letter_Scores_For_Bar.append(model+" "+model_letter_score)
+        #model_letter_score = lg.CalculateLetterGrade(model_score)
+        #Letter_Grades_For_Graph.append(model_letter_score)
+        Models_With_Letter_Scores_For_Bar.append(model)
         Score_Datapoints_For_Graph.append(model_score)
         Price_List_For_Graph.append(model_data.get("AverageCost", 0))
 

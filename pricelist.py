@@ -1,4 +1,7 @@
 model_prices = {
+
+    # Data Source: AI/ML API (the API provider used for this experiment)
+
     # Free Tier
     "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning": {"in": 0.0, "out": 0.0},
     "baidu/ernie-4.5-0.3b": {"in": 0.0, "out": 0.0},
@@ -9,6 +12,7 @@ model_prices = {
     "openai/gpt-oss-120b": {"in": 0.05486, "out": 0.5486},
 
     # ~$0.06–0.13
+    "google/gemma-3n-e4b-it": {"in": 0.06, "out": 0.12},
     "nvidia/nemotron-3-nano-30b-a3b": {"in": 0.065, "out": 0.26},
     "openai/gpt-5-nano-2025-08-07": {"in": 0.065, "out": 0.52},
     # Expanded baidu/ernie-4.5-*
