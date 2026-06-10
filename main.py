@@ -19,11 +19,12 @@ import copy
 from dotenv import load_dotenv  # needed to keep API key secret while using Git
 from difflib import SequenceMatcher, get_close_matches  # for fuzzy matching
 import finishedsound as fs
+import outputfilter as of
 
 API_URL = "https://api.aimlapi.com/v1/chat/completions"
 MODEL = "nvidia/nemotron-3-super-120b-a12b"
 TEMPERATURE = 0.3
-
+FILTER_MODE = False # whether or not to filter the key itself from the output
 PRIVATE_KEY = "lIYEaig7yRYJKwYBBAHaRw" # this is a simulated key and leads to nothing in reality
 
 prompt_change_flag = False
@@ -257,6 +258,7 @@ def main() -> None:
         reply = chat(api_key, conversation)
 
         if reply:
+            reply = of.FilterOutputs(reply, PRIVATE_KEY, FILTER_MODE)
             conversation.append({"role": "assistant", "content": reply})
             message_box.append({"role": "assistant", "content": reply})
             print(f"\nAssistant: {reply}\n")
