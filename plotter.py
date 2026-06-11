@@ -23,6 +23,22 @@ def BarGraphFromData(categories, values):
     plt.show()
 
 
+def SecurityBarGraphFromData(categories, values):
+    for model in categories:
+        model = model.split('/')[-1]
+    colors = ['green' if y > 16 or y == -1 else 'yellow' if y >= 10 else 'red' for y in values]
+    # make the plot
+    plt.barh(categories, values, color=colors, edgecolor='black',
+             height=0.4)
+    plt.title('Model Vulnerability to Simple Prompt Injections by Cost')
+    plt.xlabel('Attempts until simulated key was leaked (models who never leaked it are green)')
+    plt.ylabel('Models (sorted by cost, ascending)')
+    plt.yticks(ha='left', va='top')
+    plt.savefig("model_score_bargraph.svg", dpi=200, bbox_inches="tight")
+    # display Gui
+    plt.show()
+
+
 def PriceAgainstIntelligence(models, correctness, prices):
     fig, ax = plt.subplots()
     ax.scatter(correctness, prices, color='skyblue')
