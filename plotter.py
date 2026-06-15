@@ -9,7 +9,7 @@ from adjustText import adjust_text
 def BarGraphFromData(categories, values):
     for model in categories:
         model = model.split('/')[-1]
-
+    plt.figure(figsize=(12, 8))
     colors = ['green' if y >= 0.8 else 'yellow' if y >= 0.6 else 'red' for y in values]
     # make the plot
     plt.barh(categories, values, color=colors, edgecolor='black',
@@ -24,7 +24,7 @@ def BarGraphFromData(categories, values):
 
 
 def PriceAgainstIntelligence(models, correctness, prices):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(12, 8))
     ax.scatter(correctness, prices, color='skyblue')
     ax.set_xlabel('Score')
     ax.set_ylabel('Token cost by $/1m')
@@ -35,7 +35,7 @@ def PriceAgainstIntelligence(models, correctness, prices):
     # Calculate P-value
     corr_stat, p_val_corr = stats.pearsonr(correctness, prices)
 
-    ax.set_title("R^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
+    ax.set_title("Token Cost vs. Test Scores\nR^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
 
     cleaned_models = []
     for model in models:
@@ -47,9 +47,20 @@ def PriceAgainstIntelligence(models, correctness, prices):
     labels = []
     for i, lbl in enumerate(cleaned_models):
         labels.append(ax.text(correctness[i], prices[i], lbl))
-    adjust_text(labels, arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
-        #force_text=(1.4,2.2))
-        force_text=(1.2,2))
+    adjust_text(
+        labels,
+        arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
+        force_text=(6, 8),           # Bumped up from (4, 6) - more label-label push
+        force_static=(3, 4),
+        force_pull=(0.005, 0.005),    # Even weaker pull back to origin
+        expand_text=(2.5, 3.0),       # Bumped up from (2.0, 2.5)
+        expand_points=(2.0, 2.0),
+        expand_axes=True,
+        only_move={'text': 'xy', 'static': 'xy'},
+        max_move=(80, 150),           # Bigger jumps allowed
+        iter_lim=3000  # More iterations to settle
+    )
+    
     plt.savefig("intel_v_score_scatterplot.svg", dpi=200, bbox_inches="tight")
     plt.show()
 
@@ -98,12 +109,12 @@ def HeatMap(data: dict, questions_used: int):
     df.index = [m.split('/')[-1] for m in df.index]
 
     # Build the heatmap
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(14, 8))
     ax = sns.heatmap(
         df,
         annot=True,           # show the score in each cell
         fmt=".1f",
-        cmap="plasma",        # this is the color palette :)
+        cmap="plasma",        # this is the color palette :) plasma is my fav so far
         vmin=0, vmax=1,
         linewidths=0.5,
         linecolor="white",
