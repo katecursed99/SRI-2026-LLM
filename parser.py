@@ -156,6 +156,6 @@ def CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_L
 
 
 Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph, Time_To_Fail = CalculateDataPoints(Models_For_Graph, Score_Datapoints_For_Graph, Question_List_For_Graph, Letter_Grades_For_Graph, Models_With_Letter_Scores_For_Bar, Price_List_For_Graph, Time_To_Fail)
-plotter.PriceAgainstIntelligence(Models_For_Graph, Time_To_Fail, Price_List_For_Graph)
-plotter.BarGraphFromData(Models_With_Letter_Scores_For_Bar, Score_Datapoints_For_Graph)
+plotter.PriceAgainstIntelligence(Models_For_Graph, Time_To_Fail, Price_List_For_Graph, True)
+plotter.PriceAgainstIntelligence(Models_For_Graph, Time_To_Fail, Price_List_For_Graph, False)
 plotter.SecurityBarGraphFromData(Models_For_Graph, Time_To_Fail)

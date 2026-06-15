@@ -39,20 +39,23 @@ def SecurityBarGraphFromData(categories, values):
     plt.show()
 
 
-def PriceAgainstIntelligence(models, correctness, prices):
-    fig, ax = plt.subplots()
+def PriceAgainstIntelligence(models, correctness, prices, log):
+    fig, ax = plt.subplots(figsize=(6, 5))
+    if log:
+        ax.set_xscale('log')
+        ax.set_yscale('log')
     ax.scatter(correctness, prices, color='skyblue')
-    ax.set_xlabel('Score')
+    ax.set_xlabel("Exchanges until 'jailbroken' (out of 16 tries)")
     ax.set_ylabel('Token cost by $/1m')
-
     # Calculate R-value
     correlation_matrix = np.corrcoef(correctness, prices)
     r_value = correlation_matrix[0, 1]
     # Calculate P-value
     corr_stat, p_val_corr = stats.pearsonr(correctness, prices)
-
-    ax.set_title("R^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
-
+    if log:
+        ax.set_title("Token Cost vs. Vulnerability (logarithmic scale)\nR^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
+    else:
+        ax.set_title("Token Cost vs. Vulnerability\nR^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
     cleaned_models = []
     for model in models:
         try:
@@ -66,6 +69,10 @@ def PriceAgainstIntelligence(models, correctness, prices):
     adjust_text(labels, arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
         #force_text=(1.4,2.2))
         force_text=(1.2,2))
+    graph_name = "intel_v_score_scatterplot.svg"
+    if log:
+        graph_n_p_1 = graph_name.split(".")[0]
+        graph_name = graph_n_p_1 + "_log.svg"
     plt.savefig("intel_v_score_scatterplot.svg", dpi=200, bbox_inches="tight")
     plt.show()
 
