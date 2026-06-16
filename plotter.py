@@ -5,15 +5,18 @@ import pandas as pd
 from scipy import stats
 from adjustText import adjust_text
 
+# Dark to light gradient
+color_palette = ['#440154','#4b2675','#74278c','#a03196','#d85783','#f89456','#fde725']
+color_palette_flipped = color_palette.reverse()
 
 def BarGraphFromData(categories, values):
     for model in categories:
         model = model.split('/')[-1]
     plt.figure(figsize=(12, 8))
-    colors = ['green' if y >= 0.8 else 'yellow' if y >= 0.6 else 'red' for y in values]
+    colors = [color_palette[0] if y >= 0.98 else color_palette[1] if y >= 0.90 else color_palette[2] if y >= 0.8 else color_palette[3] if y >= 0.7 else color_palette[4] if y >= 0.6 else color_palette[5] if y >= 0.5 else color_palette[6] for y in values]
     # make the plot
     plt.barh(categories, values, color=colors, edgecolor='black',
-             height=0.4)
+             height=1)
     plt.title('Overall Scores by Model')
     plt.xlabel('Score')
     plt.ylabel('Models (sorted by cost, ascending)')
@@ -25,7 +28,7 @@ def BarGraphFromData(categories, values):
 
 def PriceAgainstIntelligence(models, correctness, prices):
     fig, ax = plt.subplots(figsize=(12, 8))
-    ax.scatter(correctness, prices, color='skyblue')
+    scatter = ax.scatter(correctness, prices, c=correctness, cmap='plasma')
     ax.set_xlabel('Score')
     ax.set_ylabel('Token cost by $/1m')
 
@@ -35,7 +38,7 @@ def PriceAgainstIntelligence(models, correctness, prices):
     # Calculate P-value
     corr_stat, p_val_corr = stats.pearsonr(correctness, prices)
 
-    ax.set_title("Token Cost vs. Test Scores\nR^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)))
+    ax.set_title("Token Cost vs. Test Scores\nR^2="+str(round(r_value*r_value, 4))+"\nP="+str(round(p_val_corr,4)), color='#440154')
 
     cleaned_models = []
     for model in models:
@@ -45,11 +48,25 @@ def PriceAgainstIntelligence(models, correctness, prices):
             pass
         cleaned_models.append(model)
     labels = []
+    colors = scatter.to_rgba(correctness)
+    for col in colors:  # for each color in the list
+        for j in range(2):  # go through each non-alpha value
+            if j != 1:
+                if col[j] >= 0.2:  # if it can handle it without clipping
+                    col[j] -= 0.2  # add some darkness to it
+                else:
+                    col[j] = 0  # else just 0 it out
+            elif j == 1:  # handle green differently so it doesn't go puke mode
+                if col[j] >= 0.3:  # if it can handle it without clipping
+                    col[j] -= 0.3  # add some darkness to it
+                else:
+                    col[j] = 0  # else just 0 it out
+
     for i, lbl in enumerate(cleaned_models):
-        labels.append(ax.text(correctness[i], prices[i], lbl))
+        labels.append(ax.text(correctness[i], prices[i], lbl, color=colors[i]))
     adjust_text(
         labels,
-        arrowprops=dict(arrowstyle="->", color='red', lw=0.5),
+        arrowprops=dict(arrowstyle="->", color='#d85783', lw=0.5),
         force_text=(6, 8),           # Bumped up from (4, 6) - more label-label push
         force_static=(3, 4),
         force_pull=(0.005, 0.005),    # Even weaker pull back to origin
